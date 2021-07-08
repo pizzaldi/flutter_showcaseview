@@ -47,8 +47,8 @@ class _MailPageState extends State<MailPage> {
   @override
   Widget build(BuildContext context) {
     //Start showcase view after current widget frames are drawn.
-    WidgetsBinding.instance.addPostFrameCallback((_) =>
-        ShowCaseWidget.of(context)
+    WidgetsBinding.instance!.addPostFrameCallback((_) =>
+        ShowCaseWidget.of(context)!
             .startShowCase([_one, _two, _three, _four, _five]));
 
     return Scaffold(
@@ -157,7 +157,7 @@ class _MailPageState extends State<MailPage> {
                         ),
                       ).then((_) {
                         setState(() {
-                          ShowCaseWidget.of(context)
+                          ShowCaseWidget.of(context)!
                               .startShowCase([_four, _five]);
                         });
                       });
@@ -319,7 +319,7 @@ class _MailPageState extends State<MailPage> {
           backgroundColor: Colors.white,
           onPressed: () {
             setState(() {
-              ShowCaseWidget.of(context)
+              ShowCaseWidget.of(context)!
                   .startShowCase([_one, _two, _three, _four, _five]);
             });
           },
@@ -334,11 +334,11 @@ class _MailPageState extends State<MailPage> {
 }
 
 class Mail {
-  String sender;
-  String sub;
-  String msg;
-  String date;
-  bool isUnread;
+  String? sender;
+  String? sub;
+  String? msg;
+  String? date;
+  bool? isUnread;
 
   Mail({
     this.sender,
@@ -374,7 +374,7 @@ class MailTile extends StatelessWidget {
                     color: Colors.blue[200],
                   ),
                   child: Center(
-                    child: Text(mail.sender[0]),
+                    child: Text(mail.sender![0]),
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(left: 8)),
@@ -382,26 +382,26 @@ class MailTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      mail.sender,
+                      mail.sender!,
                       style: TextStyle(
                         fontWeight:
-                            mail.isUnread ? FontWeight.bold : FontWeight.normal,
+                            mail.isUnread! ? FontWeight.bold : FontWeight.normal,
                         fontSize: 17,
                       ),
                     ),
                     Text(
-                      mail.sub,
+                      mail.sub!,
                       style: TextStyle(
                         fontWeight:
-                            mail.isUnread ? FontWeight.bold : FontWeight.normal,
+                            mail.isUnread! ? FontWeight.bold : FontWeight.normal,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      mail.msg,
+                      mail.msg!,
                       style: TextStyle(
                         fontWeight:
-                            mail.isUnread ? FontWeight.bold : FontWeight.normal,
+                            mail.isUnread! ? FontWeight.bold : FontWeight.normal,
                         fontSize: 15,
                       ),
                     ),
@@ -413,10 +413,10 @@ class MailTile extends StatelessWidget {
           Column(
             children: <Widget>[
               Text(
-                mail.date,
+                mail.date!,
                 style: TextStyle(
                   fontWeight:
-                      mail.isUnread ? FontWeight.bold : FontWeight.normal,
+                      mail.isUnread! ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
               Icon(

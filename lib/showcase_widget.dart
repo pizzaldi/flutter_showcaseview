@@ -28,15 +28,15 @@ import 'package:flutter/material.dart';
 
 class ShowCaseWidget extends StatefulWidget {
   final Builder builder;
-  final VoidCallback onFinish;
-  final Function(int, GlobalKey) onStart;
-  final Function(int, GlobalKey) onComplete;
+  final VoidCallback? onFinish;
+  final Function(int?, GlobalKey)? onStart;
+  final Function(int?, GlobalKey)? onComplete;
   final bool autoPlay;
   final Duration autoPlayDelay;
   final bool autoPlayLockEnable;
 
   const ShowCaseWidget({
-    @required this.builder,
+    required this.builder,
     this.onFinish,
     this.onStart,
     this.onComplete,
@@ -46,14 +46,11 @@ class ShowCaseWidget extends StatefulWidget {
   });
 
   static activeTargetWidget(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_InheritedShowCaseView>()
-        .activeWidgetIds;
+    return context.dependOnInheritedWidgetOfExactType<_InheritedShowCaseView>()!.activeWidgetIds;
   }
 
-  static ShowCaseWidgetState of(BuildContext context) {
-    ShowCaseWidgetState state =
-        context.findAncestorStateOfType<ShowCaseWidgetState>();
+  static ShowCaseWidgetState? of(BuildContext context) {
+    ShowCaseWidgetState? state = context.findAncestorStateOfType<ShowCaseWidgetState>();
     if (state != null) {
       return context.findAncestorStateOfType<ShowCaseWidgetState>();
     } else {
@@ -66,15 +63,14 @@ class ShowCaseWidget extends StatefulWidget {
 }
 
 class ShowCaseWidgetState extends State<ShowCaseWidget> {
-  List<GlobalKey> ids;
-  int activeWidgetId;
-  bool autoPlay;
-  Duration autoPlayDelay;
-  bool autoPlayLockEnable;
+  List<GlobalKey>? ids;
+  int activeWidgetId = 9999;
+  late bool autoPlay;
+  late Duration autoPlayDelay;
+  late bool autoPlayLockEnable;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     this.autoPlayDelay = widget.autoPlayDelay;
     this.autoPlay = widget.autoPlay;
@@ -89,17 +85,17 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
     });
   }
 
-  void completed(GlobalKey id) {
-    if (ids != null && ids[activeWidgetId] == id) {
+  void completed(GlobalKey? id) {
+    if (ids != null && ids![activeWidgetId] == id) {
       setState(() {
         _onComplete();
         ++activeWidgetId;
         _onStart();
 
-        if (activeWidgetId >= ids.length) {
+        if (activeWidgetId >= ids!.length) {
           _cleanupAfterSteps();
           if (widget.onFinish != null) {
-            widget.onFinish();
+            widget.onFinish!();
           }
         }
       });
@@ -113,18 +109,18 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
   }
 
   void _onStart() {
-    if (activeWidgetId < ids.length) {
-      widget.onStart?.call(activeWidgetId, ids[activeWidgetId]);
+    if (activeWidgetId < ids!.length) {
+      widget.onStart?.call(activeWidgetId, ids![activeWidgetId]);
     }
   }
 
   void _onComplete() {
-    widget.onComplete?.call(activeWidgetId, ids[activeWidgetId]);
+    widget.onComplete?.call(activeWidgetId, ids![activeWidgetId]);
   }
 
   void _cleanupAfterSteps() {
     ids = null;
-    activeWidgetId = null;
+    activeWidgetId = 9999;
   }
 
   @override
@@ -137,14 +133,13 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
 }
 
 class _InheritedShowCaseView extends InheritedWidget {
-  final GlobalKey activeWidgetIds;
+  final GlobalKey? activeWidgetIds;
 
   _InheritedShowCaseView({
-    @required this.activeWidgetIds,
-    @required child,
+    required this.activeWidgetIds,
+    required child,
   }) : super(child: child);
 
   @override
-  bool updateShouldNotify(_InheritedShowCaseView oldWidget) =>
-      oldWidget.activeWidgetIds != activeWidgetIds;
+  bool updateShouldNotify(_InheritedShowCaseView oldWidget) => oldWidget.activeWidgetIds != activeWidgetIds;
 }
