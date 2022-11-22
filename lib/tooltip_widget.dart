@@ -46,6 +46,7 @@ class ToolTipWidget extends StatefulWidget {
   static late bool isArrowUp;
   final VoidCallback? onTooltipTap;
   final EdgeInsets? contentPadding;
+  final String? bypassPosition;
 
   ToolTipWidget(
       {this.position,
@@ -63,7 +64,8 @@ class ToolTipWidget extends StatefulWidget {
       this.contentHeight,
       this.contentWidth,
       this.onTooltipTap,
-      this.contentPadding});
+      this.contentPadding,
+      this.bypassPosition});
 
   @override
   _ToolTipWidgetState createState() => _ToolTipWidgetState();
@@ -78,7 +80,10 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
     return (widget.screenSize!.height - position.dy) <= height;
   }
 
-  String findPositionForContent(Offset position) {
+  String? findPositionForContent(Offset position) {
+    if (widget.bypassPosition != null) {
+      return widget.bypassPosition;
+    }
     if (isCloseToTopOrBottom(position)) {
       return 'ABOVE';
     } else {
@@ -165,7 +170,8 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
         ? widget.position!.getBottom() + (contentOffsetMultiplier * 3)
         : widget.position!.getTop() + (contentOffsetMultiplier * 3);
 
-    final num contentFractionalOffset = contentOffsetMultiplier.clamp(-1.0, 0.0);
+    final num contentFractionalOffset =
+        contentOffsetMultiplier.clamp(-1.0, 0.0);
 
     double paddingTop = ToolTipWidget.isArrowUp ? 22 : 0;
     double paddingBottom = ToolTipWidget.isArrowUp ? 0 : 27;
